@@ -1,5 +1,6 @@
 import tkinter as tk
 from history import get_history
+from pynput.keyboard import Controller
 
 class Launcher:
     def __init__(self):
@@ -17,6 +18,10 @@ class Launcher:
         self.current_window = new_window  # 更新當前窗口的引用
         new_window.title("剪貼簿")
         
+        # 設置窗口為無邊框窗口，並顯示在最上層
+        new_window.attributes("-topmost", True)  # 確保窗口顯示在最上層
+        new_window.overrideredirect(True)  # 移除標題欄
+
         # 顯示歷史記錄
         tk.Label(new_window, text="選擇要貼上的文字").pack()
         history_list = tk.Listbox(new_window, width=50, height=10)
@@ -26,7 +31,7 @@ class Launcher:
         for item in get_history():
             history_list.insert(tk.END, item)
 
-        # 當用戶點擊某個項目時，直接執行 clipboard_append 並關閉窗口
+        # 當用戶點擊某個項目時，直接執行 clipboard_append 並模擬輸入
         def on_select(event):
             selected = history_list.get(history_list.curselection())  # 獲取當前選中的文字
             new_window.clipboard_clear()
